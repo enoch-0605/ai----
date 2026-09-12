@@ -29,8 +29,11 @@ export default function HomePage() {
       const session = await createSession(topic.trim(), questionCount, difficulty)
       saveActiveSession(session.sessionId)
       Taro.navigateTo({ url: `/pages/game/index?sessionId=${session.sessionId}` })
-    } catch {
-      Taro.showToast({ title: '航线生成失败，请重试', icon: 'none' })
+    } catch (error) {
+      const message = error instanceof Error && error.message === 'SEARCH_NO_EVIDENCE'
+        ? '当前主题暂无可靠资料，请稍后重试'
+        : '航线生成失败，请重试'
+      Taro.showToast({ title: message, icon: 'none' })
     } finally {
       setLoading(false)
     }

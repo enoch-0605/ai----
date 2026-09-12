@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from .evidence import FreshnessStatus, GenerationMode, SourceRecord
+
 
 class Difficulty(str, Enum):
     beginner = "beginner"
@@ -34,6 +36,9 @@ class PublicQuestion(BaseModel):
     difficulty: Difficulty
     stem: str
     options: list[QuestionOption]
+    sources: list[SourceRecord] = Field(default_factory=list)
+    freshness: FreshnessStatus = FreshnessStatus.offline
+    generationMode: GenerationMode = GenerationMode.offline
 
 
 class QuestionAnswer(BaseModel):
@@ -41,6 +46,7 @@ class QuestionAnswer(BaseModel):
     isCorrect: bool
     explanation: str
     encouragement: str
+    sources: list[SourceRecord] = Field(default_factory=list)
 
 
 class CreateSessionRequest(BaseModel):
@@ -98,6 +104,8 @@ class LearningReport(BaseModel):
     weaknesses: list[str]
     recommendations: list[str]
     disclaimer: str = "AI 生成内容仅供学习参考。"
+    sources: list[SourceRecord] = Field(default_factory=list)
+    freshness: FreshnessStatus = FreshnessStatus.offline
 
 
 class FeedbackRequest(BaseModel):

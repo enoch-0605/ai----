@@ -59,6 +59,18 @@ def test_missing_session_returns_domain_error():
     assert response.json()["detail"] == "SESSION_NOT_FOUND"
 
 
+def test_current_topic_exposes_source_metadata_without_private_answer():
+    created = client.post(
+        "/api/v1/sessions",
+        json={"topic": "Python 3.14 最新版本", "questionCount": 5},
+    )
+    assert created.status_code == 200
+    question = created.json()["question"]
+    assert question["freshness"] == "fresh"
+    assert question["sources"]
+    assert "answer" not in question
+
+
 def test_two_consecutive_correct_answers_raise_next_question_difficulty():
     created = client.post(
         "/api/v1/sessions",

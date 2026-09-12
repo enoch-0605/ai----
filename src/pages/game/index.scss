@@ -1,6 +1,6 @@
 @use '../../styles/theme.scss' as *;
 .game-page { @include phone-shell; padding: 0 20px 100px; }
-.game-page--loading { display: grid; place-items: center; color: $muted; }
+.game-page--loading { display: flex; flex-direction: column; justify-content: center; gap: 20px; color: $muted; }
 .game-top { padding-top: 10px; }
 .game-title, .stats { display: flex; align-items: center; justify-content: space-between; }
 .game-title { margin-bottom: 12px; color: $ink; font-size: 14px; font-weight: 700; }
@@ -12,6 +12,9 @@
 .question-card { @include panel; min-height: 170px; margin: 30px 0 17px; padding: 20px 17px; }
 .tag { display: inline-block; margin-bottom: 14px; padding: 4px 8px; border: 1px solid $ink; background: $gold; font-size: 10px; font-weight: 900; }
 .question-stem { display: block; color: $ink; font-size: 18px; line-height: 1.55; }
+.source-list { margin-top: 16px; padding-top: 12px; border-top: 1px dashed $line; }
+.source-label, .source-item { display: block; color: $muted; font-size: 10px; line-height: 1.6; }
+.source-item { margin-top: 4px; color: $sea; text-decoration: underline; }
 .options { display: flex; flex-direction: column; gap: 10px; }
 .option { display: flex; align-items: center; gap: 12px; padding: 14px 13px; border: 2px solid #b8c4bd; background: $paper; color: $ink; font-size: 13px; }
 .option.is-selected { border-color: $red; background: #f8dfd3; }

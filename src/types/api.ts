@@ -1,6 +1,18 @@
 export type Difficulty = 'beginner' | 'advanced' | 'expert'
 export type QuestionType = 'single_choice' | 'true_false'
 export type SessionStatus = 'playing' | 'feedback' | 'completed' | 'failed'
+export type FreshnessStatus = 'offline' | 'fresh' | 'stale' | 'unavailable'
+export type GenerationMode = 'online' | 'offline' | 'template'
+
+export interface SourceRecord {
+  source_id: string
+  title: string
+  url: string
+  publisher: string
+  published_at?: string
+  retrieved_at: string
+  excerpt?: string
+}
 
 export interface QuestionOption {
   id: string
@@ -14,6 +26,9 @@ export interface PublicQuestion {
   difficulty: Difficulty
   stem: string
   options: QuestionOption[]
+  sources: SourceRecord[]
+  freshness: FreshnessStatus
+  generationMode: GenerationMode
 }
 
 export interface CreateSessionResponse {
@@ -42,6 +57,7 @@ export interface QuestionFeedback {
   isCorrect: boolean
   explanation: string
   encouragement: string
+  sources: SourceRecord[]
 }
 
 export interface SubmitAnswerResponse {
@@ -65,6 +81,8 @@ export interface LearningReport {
   weaknesses: string[]
   recommendations: string[]
   disclaimer: string
+  sources: SourceRecord[]
+  freshness: FreshnessStatus
 }
 
 export interface UserProfile {

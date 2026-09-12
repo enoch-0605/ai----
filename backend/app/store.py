@@ -5,6 +5,7 @@ from typing import Protocol
 from sqlalchemy import select
 
 from .db import GameSessionRecord, create_session_factory
+from .evidence import EvidenceBundle, FreshnessStatus, GenerationMode
 from .models import Difficulty, PublicQuestion, QuestionAnswer, QuestionType, SessionStatus
 
 
@@ -18,6 +19,8 @@ class Question:
     options: list[dict[str, str]]
     answer: str
     explanation: str
+    evidence: EvidenceBundle | None = None
+    generation_mode: GenerationMode = GenerationMode.offline
 
     def public(self) -> PublicQuestion:
         return PublicQuestion(
@@ -27,6 +30,9 @@ class Question:
             difficulty=self.difficulty,
             stem=self.stem,
             options=self.options,
+            sources=self.evidence.sources if self.evidence else [],
+            freshness=self.evidence.freshness if self.evidence else FreshnessStatus.offline,
+            generationMode=self.generation_mode,
         )
 
 
@@ -160,11 +166,26 @@ class SqlAlchemySessionStore:
 
     @staticmethod
     def _question_to_dict(question: Question) -> dict:
-        return {**question.__dict__, "question_type": question.question_type.value, "difficulty": question.difficulty.value}
+        return {
+            **question.__dict__,
+            "question_type": question.question_type.value,
+            "difficulty": question.difficulty.value,
+            "evidence": question.evidence.model_dump(mode="json") if question.evidence else None,
+            "generation_mode": question.generation_mode.value,
+        }
 
     @staticmethod
     def _question_from_dict(payload: dict) -> Question:
-        return Question(**{**payload, "question_type": QuestionType(payload["question_type"]), "difficulty": Difficulty(payload["difficulty"])})
+        from .evidence import EvidenceBundle
+
+        evidence = EvidenceBundle.model_validate(payload["evidence"]) if payload.get("evidence") else None
+        return Question(**{
+            **payload,
+            "question_type": QuestionType(payload["question_type"]),
+            "difficulty": Difficulty(payload["difficulty"]),
+            "evidence": evidence,
+            "generation_mode": GenerationMode(payload.get("generation_mode", "offline")),
+        })
 
     @staticmethod
     def _answer_to_dict(answer: AnswerRecord) -> dict:

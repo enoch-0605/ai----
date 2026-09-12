@@ -15,6 +15,7 @@ class QuestionOutput(BaseModel):
     options: list[dict[str, str]] = Field(default_factory=list)
     answer: str = Field(default="A", validation_alias=AliasChoices("answer", "correct_answer", "correctAnswer"))
     explanation: str = ""
+    citation_ids: list[str] = Field(default_factory=list)
 
     @field_validator("options", mode="before")
     @classmethod
@@ -54,15 +55,16 @@ class DeepSeekQuestionChain:
 题型：{question_type}
 JSON 必须严格包含以下字段：
 {{"question_type":"single_choice","knowledge_point":"具体知识点","difficulty":"beginner","stem":"具体问题","options":[{{"id":"A","text":"具体选项"}},{{"id":"B","text":"具体选项"}},{{"id":"C","text":"具体选项"}},{{"id":"D","text":"具体选项"}}],"answer":"A","explanation":"说明为什么该答案正确"}}
-单选题必须提供 A、B、C、D 四个具体选项，判断题必须提供 A（正确）、B（错误）两个具体选项；answer 必须是正确选项 id，不能使用占位词或空字符串。"""),
-            ("human", "请生成第 {index} 题。题目、每个选项、正确答案和解析都必须围绕主题给出具体内容。"),
+单选题必须提供 A、B、C、D 四个具体选项，判断题必须提供 A（正确）、B（错误）两个具体选项；answer 必须是正确选项 id，不能使用占位词或空字符串。若给出了证据，必须返回 citation_ids 数组，且只能填写证据中的 ID。"""),
+            ("human", "请生成第 {index} 题。题目、每个选项、正确答案和解析都必须围绕主题给出具体内容。可用证据如下：\n{evidence_text}\n如果提供了证据，必须在 citation_ids 中填写证据 ID。"),
         ])
         self.chain = prompt | model.with_structured_output(QuestionOutput, method="json_mode")
 
-    def invoke(self, topic: str, difficulty: str, question_type: str, index: int) -> QuestionOutput:
+    def invoke(self, topic: str, difficulty: str, question_type: str, index: int, evidence_text: str = "") -> QuestionOutput:
         return self.chain.invoke({
             "topic": topic,
             "difficulty": difficulty,
             "question_type": question_type,
             "index": index,
+            "evidence_text": evidence_text,
         })

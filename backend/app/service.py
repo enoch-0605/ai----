@@ -15,6 +15,7 @@ from .models import (
     SubmitAnswerResponse,
 )
 from .store import AnswerRecord, Question, Session, SessionStore
+from .metrics import GenerationTimer, generation_event
 
 
 class GameService:
@@ -80,6 +81,7 @@ class GameService:
             isCorrect=is_correct,
             explanation=current.explanation,
             encouragement="回答正确，继续保持！" if is_correct else "别急，理解解析后再试一次相关知识点。",
+            sources=current.evidence.sources if current.evidence else [],
         )
         record = AnswerRecord(current.question_id, request.answer, is_correct, feedback, request.clientRequestId)
         session.answers.append(record)
@@ -112,6 +114,15 @@ class GameService:
         if session.status != SessionStatus.completed:
             raise HTTPException(status_code=409, detail="SESSION_NOT_COMPLETED")
         data = self.ai.generate_report(session.topic, [{"is_correct": item.is_correct} for item in session.answers])
+        sources = []
+        for question in session.questions:
+            if question.evidence:
+                sources.extend(question.evidence.sources)
+        unique_sources = {source.source_id: source for source in sources}
+        freshness = next(
+            (question.evidence.freshness for question in session.questions if question.evidence),
+            None,
+        )
         return LearningReport(
             sessionId=session.session_id,
             score=session.score,
@@ -121,15 +132,32 @@ class GameService:
             strengths=data["strengths"],
             weaknesses=data["weaknesses"],
             recommendations=data["recommendations"],
+            sources=list(unique_sources.values()),
+            freshness=freshness or "offline",
         )
 
     def _generate_question(self, session: Session, previous_correct: bool | None) -> Question:
-        generated = self.ai.generate_question(
-            session.topic,
-            len(session.questions),
-            session.difficulty,
-            session.question_types,
-            previous_correct,
+        timer = GenerationTimer()
+        try:
+            generated = self.ai.generate_question(
+                session.topic,
+                len(session.questions),
+                session.difficulty,
+                session.question_types,
+                previous_correct,
+            )
+        except (TimeoutError, ValueError) as error:
+            detail = str(error) or "AI_OUTPUT_INVALID"
+            generation_event(event="question_generation", session_id=session.session_id, provider="configured", status=detail, latency_ms=timer.elapsed_ms)
+            raise HTTPException(status_code=503, detail=detail) from error
+        generation_event(
+            event="question_generation",
+            session_id=session.session_id,
+            provider=generated.evidence.provider if generated.evidence else "offline",
+            status="success",
+            evidence_count=len(generated.evidence.sources) if generated.evidence else 0,
+            freshness=generated.evidence.freshness.value if generated.evidence else "offline",
+            latency_ms=timer.elapsed_ms,
         )
         return Question(
             question_id=f"q_{uuid4().hex}",
@@ -140,6 +168,8 @@ class GameService:
             options=generated.options,
             answer=generated.answer,
             explanation=generated.explanation,
+            evidence=generated.evidence,
+            generation_mode=generated.generation_mode,
         )
 
     def _adjust_difficulty(self, session: Session) -> None:

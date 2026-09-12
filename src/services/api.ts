@@ -36,21 +36,10 @@ export function login(provider: 'mock' | 'wechat', code: string, anonymousSessio
   return request<LoginResponse>('/auth/login', { method: 'POST', data: { provider, code, anonymousSessionId } })
 }
 
-export function getMe() {
-  return request<UserProfile>('/auth/me')
-}
-
-export function getLearningOverview() {
-  return request<LearningOverview>('/assets/overview')
-}
-
-export function getHistory() {
-  return request<HistoryItem[]>('/assets/history')
-}
-
-export function getMistakes() {
-  return request<MistakeItem[]>('/assets/mistakes')
-}
+export function getMe() { return request<UserProfile>('/auth/me') }
+export function getLearningOverview() { return request<LearningOverview>('/assets/overview') }
+export function getHistory() { return request<HistoryItem[]>('/assets/history') }
+export function getMistakes() { return request<MistakeItem[]>('/assets/mistakes') }
 
 export function createSession(topic: string, questionCount: 5 | 10, difficulty: Difficulty) {
   return request<CreateSessionResponse>('/sessions', {
@@ -59,9 +48,7 @@ export function createSession(topic: string, questionCount: 5 | 10, difficulty: 
   })
 }
 
-export function getSession(sessionId: string) {
-  return request<SessionResponse>(`/sessions/${sessionId}`)
-}
+export function getSession(sessionId: string) { return request<SessionResponse>(`/sessions/${sessionId}`) }
 
 export function submitAnswer(sessionId: string, questionId: string, answer: string, clientRequestId: string) {
   return request<SubmitAnswerResponse>(`/sessions/${sessionId}/answers`, {

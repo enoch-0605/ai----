@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+node_modules
+dist
+build
+.pytest_cache
+__pycache__
+*.py[cod]
+backend/.env
+backend/.pytest_cache
+backend/tests
+openspec
+docker-compose.yml
