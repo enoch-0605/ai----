@@ -48,8 +48,14 @@ class DeepSeekQuestionChain:
             max_retries=1,
         )
         prompt = ChatPromptTemplate.from_messages([
-            ("system", "你是严谨的学习出题助手。请只输出合法 JSON，且必须符合指定结构。主题：{topic}，难度：{difficulty}，题型：{question_type}。"),
-            ("human", "请生成第 {index} 题，确保只有一个正确答案，并给出解析。不要输出 Markdown 或 JSON 代码围栏。"),
+            ("system", """你是严谨的学习出题助手。请只输出一个合法 JSON 对象，不要输出 Markdown 或代码围栏。
+主题：{topic}
+难度：{difficulty}
+题型：{question_type}
+JSON 必须严格包含以下字段：
+{{"question_type":"single_choice","knowledge_point":"具体知识点","difficulty":"beginner","stem":"具体问题","options":[{{"id":"A","text":"具体选项"}},{{"id":"B","text":"具体选项"}},{{"id":"C","text":"具体选项"}},{{"id":"D","text":"具体选项"}}],"answer":"A","explanation":"说明为什么该答案正确"}}
+单选题必须提供 A、B、C、D 四个具体选项，判断题必须提供 A（正确）、B（错误）两个具体选项；answer 必须是正确选项 id，不能使用占位词或空字符串。"""),
+            ("human", "请生成第 {index} 题。题目、每个选项、正确答案和解析都必须围绕主题给出具体内容。"),
         ])
         self.chain = prompt | model.with_structured_output(QuestionOutput, method="json_mode")
 
