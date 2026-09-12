@@ -14,6 +14,7 @@ class GameSessionRecord(Base):
     __tablename__ = "game_session"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    user_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     topic: Mapped[str] = mapped_column(String(200), nullable=False)
     difficulty: Mapped[str] = mapped_column(String(20), nullable=False)
     question_count: Mapped[int] = mapped_column(Integer, nullable=False)

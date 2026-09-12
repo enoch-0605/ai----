@@ -1,0 +1,16 @@
+@use '../../styles/theme.scss' as *;
+.mine-page { @include phone-shell; padding: 0 20px 100px; }
+.mine-topbar { height: 66px; display: flex; align-items: center; justify-content: space-between; color: $muted; font-size: 11px; font-weight: 700; }
+.profile { display: flex; align-items: center; gap: 13px; padding: 22px 5px 30px; }
+.profile-avatar { width: 56px; height: 56px; display: grid; place-items: center; border: 3px solid $ink; border-radius: 50%; background: #e9bd62; color: $navy; font-size: 24px; font-weight: 900; }
+.profile view:last-child { display: flex; flex-direction: column; gap: 5px; }
+.profile-name { color: $navy; font-size: 20px; font-weight: 900; }
+.profile-caption, .mine-copy, .disclaimer { color: $muted; font-size: 12px; line-height: 1.7; }
+.mine-card { @include panel; padding: 20px; }
+.mine-title { display: block; margin: 4px 0 7px; color: $navy; font-size: 23px; font-weight: 900; }
+.mine-copy { display: block; }
+.mine-row { display: flex; justify-content: space-between; margin-top: 12px; padding: 16px 13px; border-bottom: 2px solid $line; color: $navy; font-size: 13px; font-weight: 700; }
+.mine-row text:last-child { color: $red; }
+.mine-row .status { color: $sea; }
+.logout-button { @include primary-button; margin-top: 27px; }
+.disclaimer { display: block; margin: 18px 0; text-align: center; }

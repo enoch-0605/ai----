@@ -103,3 +103,47 @@ class LearningReport(BaseModel):
 class FeedbackRequest(BaseModel):
     questionId: str
     reason: str = Field(min_length=1, max_length=500)
+
+
+class LoginRequest(BaseModel):
+    provider: Literal["mock", "wechat"] = "mock"
+    code: str = Field(min_length=1, max_length=200)
+    anonymousSessionId: str | None = None
+
+
+class UserProfile(BaseModel):
+    userId: str
+    nickname: str
+    avatarUrl: str = ""
+
+
+class LoginResponse(BaseModel):
+    token: str
+    user: UserProfile
+
+
+class LearningOverview(BaseModel):
+    completedCount: int
+    averageAccuracy: int
+    totalMinutes: int
+    wrongCount: int
+
+
+class HistoryItem(BaseModel):
+    sessionId: str
+    topic: str
+    status: SessionStatus
+    score: int
+    totalQuestions: int
+    accuracy: int
+    updatedAt: str
+
+
+class MistakeItem(BaseModel):
+    questionId: str
+    sessionId: str
+    topic: str
+    knowledgePoint: str
+    difficulty: Difficulty
+    reason: str
+    status: Literal["pending", "mastered"]

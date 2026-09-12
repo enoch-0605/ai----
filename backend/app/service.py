@@ -22,7 +22,7 @@ class GameService:
         self.store = store
         self.ai = ai
 
-    def create_session(self, request: CreateSessionRequest) -> CreateSessionResponse:
+    def create_session(self, request: CreateSessionRequest, user_id: str | None = None) -> CreateSessionResponse:
         session_id = f"s_{uuid4().hex}"
         session = Session(
             session_id=session_id,
@@ -31,6 +31,7 @@ class GameService:
             question_count=request.questionCount,
             question_types=request.questionTypes,
             status=SessionStatus.playing,
+            user_id=user_id,
         )
         question = self._generate_question(session, None)
         session.questions.append(question)

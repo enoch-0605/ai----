@@ -66,3 +66,41 @@ export interface LearningReport {
   recommendations: string[]
   disclaimer: string
 }
+
+export interface UserProfile {
+  userId: string
+  nickname: string
+  avatarUrl: string
+}
+
+export interface LoginResponse {
+  token: string
+  user: UserProfile
+}
+
+export interface LearningOverview {
+  completedCount: number
+  averageAccuracy: number
+  totalMinutes: number
+  wrongCount: number
+}
+
+export interface HistoryItem {
+  sessionId: string
+  topic: string
+  status: SessionStatus
+  score: number
+  totalQuestions: number
+  accuracy: number
+  updatedAt: string
+}
+
+export interface MistakeItem {
+  questionId: string
+  sessionId: string
+  topic: string
+  knowledgePoint: string
+  difficulty: Difficulty
+  reason: string
+  status: 'pending' | 'mastered'
+}

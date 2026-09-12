@@ -6,9 +6,11 @@ type Props = { active: 'home' | 'assets' | 'mine' }
 
 export default function BottomNav({ active }: Props) {
   const goHome = () => Taro.switchTab({ url: '/pages/home/index' }).catch(() => Taro.navigateTo({ url: '/pages/home/index' }))
+  const goAssets = () => Taro.navigateTo({ url: '/pages/assets/index' })
+  const goMine = () => Taro.navigateTo({ url: '/pages/mine/index' })
   return <View className="bottom-nav">
     <View className={`bottom-nav__item ${active === 'home' ? 'is-active' : ''}`} onClick={goHome}><Text>⌂</Text><Text>学习首页</Text></View>
-    <View className={`bottom-nav__item ${active === 'assets' ? 'is-active' : ''}`}><Text>◈</Text><Text>学习资产</Text></View>
-    <View className={`bottom-nav__item ${active === 'mine' ? 'is-active' : ''}`}><Text>◉</Text><Text>个人中心</Text></View>
+    <View className={`bottom-nav__item ${active === 'assets' ? 'is-active' : ''}`} onClick={goAssets}><Text>◈</Text><Text>学习资产</Text></View>
+    <View className={`bottom-nav__item ${active === 'mine' ? 'is-active' : ''}`} onClick={goMine}><Text>◉</Text><Text>个人中心</Text></View>
   </View>
 }

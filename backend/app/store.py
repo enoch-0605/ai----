@@ -53,11 +53,13 @@ class Session:
     questions: list[Question] = field(default_factory=list)
     answers: list[AnswerRecord] = field(default_factory=list)
     created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    user_id: str | None = None
 
 
 class SessionStore(Protocol):
     def save(self, session: Session) -> None: ...
     def get(self, session_id: str) -> Session | None: ...
+    def list_for_user(self, user_id: str) -> list[Session]: ...
 
 
 class InMemorySessionStore:
@@ -69,6 +71,13 @@ class InMemorySessionStore:
 
     def get(self, session_id: str) -> Session | None:
         return self.sessions.get(session_id)
+
+    def list_for_user(self, user_id: str) -> list[Session]:
+        return sorted(
+            (session for session in self.sessions.values() if session.user_id == user_id),
+            key=lambda session: session.created_at,
+            reverse=True,
+        )
 
 
 class SqlAlchemySessionStore:
@@ -90,6 +99,7 @@ class SqlAlchemySessionStore:
                 "answers": [self._answer_to_dict(item) for item in session.answers],
             },
             "created_at": session.created_at.replace(tzinfo=None),
+            "user_id": session.user_id,
         }
         with self.session_factory.begin() as database:
             record = database.get(GameSessionRecord, session.session_id)
@@ -118,6 +128,34 @@ class SqlAlchemySessionStore:
             questions=[self._question_from_dict(item) for item in state["questions"]],
             answers=[self._answer_from_dict(item) for item in state["answers"]],
             created_at=record.created_at.replace(tzinfo=timezone.utc),
+            user_id=record.user_id,
+        )
+
+    def list_for_user(self, user_id: str) -> list[Session]:
+        with self.session_factory() as database:
+            records = database.scalars(
+                select(GameSessionRecord)
+                .where(GameSessionRecord.user_id == user_id)
+                .order_by(GameSessionRecord.created_at.desc())
+            ).all()
+        return [self._record_to_session(record) for record in records]
+
+    def _record_to_session(self, record: GameSessionRecord) -> Session:
+        state = record.state_json
+        return Session(
+            session_id=record.id,
+            topic=record.topic,
+            difficulty=Difficulty(record.difficulty),
+            question_count=record.question_count,
+            question_types=[QuestionType(item) for item in state["question_types"]],
+            status=SessionStatus(record.status),
+            current_index=record.current_index,
+            score=record.score,
+            life=record.life,
+            questions=[self._question_from_dict(item) for item in state["questions"]],
+            answers=[self._answer_from_dict(item) for item in state["answers"]],
+            created_at=record.created_at.replace(tzinfo=timezone.utc),
+            user_id=record.user_id,
         )
 
     @staticmethod

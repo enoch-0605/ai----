@@ -1,1 +1,1 @@
-数据库迁移目录预留。当前 MVP 使用 SQLAlchemy 模型定义创建核心 game_session 表，正式部署前应将模型变更固化为 Alembic migration。
+数据库迁移目录保存需要在已有数据库上执行的变更。启用用户归属与学习资产查询前，请执行 `001_add_game_session_user_id.sql`；新环境仍可由 SQLAlchemy 模型创建基础表。
