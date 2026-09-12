@@ -1,0 +1,6 @@
+@use '../../styles/theme.scss' as *;
+.topbar { height: 66px; padding: 20px; display: flex; align-items: center; justify-content: space-between; color: $navy; }
+.topbar__side, .topbar__title { color: $muted; font-size: 11px; font-weight: 700; }
+.topbar__side { width: 80px; font-size: 22px; color: $navy; }
+.topbar__title { text-align: center; }
+.topbar__avatar { width: 31px; height: 31px; border: 2px solid $ink; border-radius: 50%; display: grid; place-items: center; background: #e9bd62; font-size: 14px; }

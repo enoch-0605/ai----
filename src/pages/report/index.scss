@@ -1,0 +1,27 @@
+@use '../../styles/theme.scss' as *;
+.report-page { @include phone-shell; padding: 0 20px 100px; }
+.report-page--loading { display: grid; place-items: center; color: $muted; }
+.report-topbar { height: 66px; display: flex; align-items: center; justify-content: space-between; color: $muted; font-size: 11px; font-weight: 700; }
+.report-topbar > text:first-child { width: 60px; color: $navy; font-size: 22px; }
+.avatar { width: 31px; height: 31px; display: grid; place-items: center; border: 2px solid $ink; border-radius: 50%; background: #e9bd62; color: $ink; font-size: 14px; }
+.report-hero { padding: 29px 0 17px; text-align: center; }
+.eyebrow { display: block; margin-bottom: 8px; color: $red; font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+.report-title { display: block; color: $navy; font-size: 40px; font-weight: 900; }
+.bounty { display: block; margin: 8px 0; color: $red; font-size: 48px; font-family: Georgia, serif; font-weight: 900; }
+.bounty text { color: $muted; font-family: 'Noto Sans SC'; font-size: 11px; font-weight: 500; }
+.seal { display: inline-block; padding: 5px 13px; border: 2px solid $red; color: $red; font-size: 11px; font-weight: 900; }
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 20px 0; padding: 18px 0; border-top: 1px solid $line; border-bottom: 1px solid $line; }
+.report-grid view { display: flex; flex-direction: column; align-items: center; border-right: 1px solid $line; }
+.report-grid view:last-child { border: 0; }
+.report-grid view text:first-child { color: $navy; font-size: 23px; font-weight: 900; }
+.report-grid view text:last-child { color: $muted; font-size: 11px; }
+.report-content { margin-bottom: 19px; }
+.section-title { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 900; }
+.summary, .recommendation { display: block; color: $muted; font-size: 12px; line-height: 1.7; }
+.meter { height: 8px; margin: 10px 0 17px; background: #dfd7be; }
+.meter view { height: 100%; background: $sea; }
+.pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 22px; }
+.pills text { padding: 5px 8px; border: 1px solid $navy; font-size: 11px; }
+.recommendation { margin-bottom: 5px; }
+.primary-button { @include primary-button; }
+.disclaimer { display: block; margin-top: 16px; color: $muted; font-size: 10px; text-align: center; }

@@ -1,0 +1,14 @@
+$ink: #172631;
+$navy: #102a43;
+$sea: #1976a8;
+$sea-mist: #d6e2df;
+$cream: #f7f1df;
+$paper: #fffaf0;
+$red: #c94c3d;
+$gold: #e4a83a;
+$muted: #6d7a78;
+$line: #d9c99f;
+
+@mixin phone-shell { background: $cream; min-height: 100vh; position: relative; padding-bottom: 92px; }
+@mixin primary-button { width: 100%; border: 3px solid $ink; background: $red; color: white; font-size: 15px; font-weight: 900; padding: 14px; box-shadow: 5px 5px 0 $ink; }
+@mixin panel { background: $paper; border: 2px solid $navy; box-shadow: 6px 6px 0 $line; }

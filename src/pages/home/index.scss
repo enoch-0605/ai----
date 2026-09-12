@@ -1,0 +1,22 @@
+@use '../../styles/theme.scss' as *;
+.home-page { @include phone-shell; padding: 0 20px 100px; }
+.home-page__topbar { height: 66px; display: flex; align-items: center; justify-content: space-between; color: $muted; font-size: 11px; font-weight: 700; }
+.avatar { width: 31px; height: 31px; display: grid; place-items: center; border: 2px solid $ink; border-radius: 50%; background: #e9bd62; color: $ink; font-size: 14px; }
+.home-page__hero { padding: 30px 5px 22px; }
+.eyebrow { display: block; margin-bottom: 8px; color: $red; font-size: 11px; font-weight: 900; letter-spacing: 2px; }
+.hero-title { display: block; color: $navy; font-size: 37px; font-weight: 900; line-height: 1.2; white-space: pre-line; }
+.hero-copy { display: block; margin-top: 8px; color: $muted; font-size: 13px; line-height: 1.7; white-space: pre-line; }
+.map-card { min-height: 150px; padding: 17px; border: 3px solid $navy; background: #e4ece5; }
+.map-card__title { color: $navy; font-size: 13px; font-weight: 900; }
+.route { display: flex; align-items: center; margin-top: 34px; }
+.node { width: 37px; height: 37px; display: grid; place-items: center; flex: none; border: 3px solid $navy; border-radius: 50%; background: $cream; color: $navy; font-size: 13px; font-weight: 900; }
+.node.is-active { transform: scale(1.18); border-color: $red; background: $red; color: white; box-shadow: 4px 4px 0 $navy; }
+.route-line { height: 3px; flex: 1; background: $navy; opacity: .55; }
+.input-box { margin-top: 16px; padding: 0 16px; border: 2px solid $navy; background: $paper; box-shadow: 4px 4px 0 $line; }
+.input-box input { height: 52px; color: $ink; font-size: 14px; }
+.choice-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0 23px; }
+.choice, .choice-label { padding: 6px 9px; border: 1px solid $navy; color: $navy; font-size: 11px; }
+.choice-label { border: 0; padding-left: 2px; color: $muted; }
+.choice.is-selected { background: $navy; color: white; }
+.primary-button { @include primary-button; }
+.resume-link { display: block; margin: 24px 0; color: $navy; font-size: 12px; text-align: center; text-decoration: underline; }

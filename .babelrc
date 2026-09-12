@@ -1,0 +1,6 @@
+{
+  "presets": [
+    ["taro", { "framework": "react" }],
+    ["@babel/preset-typescript", { "allExtensions": true, "isTSX": true }]
+  ]
+}

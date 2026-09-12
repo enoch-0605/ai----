@@ -1,0 +1,1 @@
+数据库迁移目录预留。当前 MVP 使用 SQLAlchemy 模型定义创建核心 game_session 表，正式部署前应将模型变更固化为 Alembic migration。
